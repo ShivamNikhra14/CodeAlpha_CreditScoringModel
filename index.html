@@ -144,7 +144,7 @@
       };
 
       try {
-        const response = await fetch("https://codealpha-creditscoringmodel.onrender.com", {
+        const response = await fetch("https://codealpha-creditscoringmodel.onrender.com/predict", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data)
