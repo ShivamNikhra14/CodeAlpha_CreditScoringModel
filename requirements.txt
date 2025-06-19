@@ -3,3 +3,4 @@ scikit-learn==1.6.1
 numpy==2.2.3
 joblib==1.3.2
 Cython==0.29.36
+flask-cors==4.0.0
