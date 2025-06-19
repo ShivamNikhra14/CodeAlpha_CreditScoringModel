@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Credit Scoring Predictor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    form {
+      background: #fff;
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    #result {
+      text-align: center;
+      font-size: 1.2em;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Credit Scoring Predictor</h1>
+
+  <form id="predictForm">
+    <!-- Add all required fields here -->
+    <div class="form-group">
+      <label for="RevolvingUtilizationOfUnsecuredLines">Revolving Utilization Of Unsecured Lines</label>
+      <input type="number" step="any" id="RevolvingUtilizationOfUnsecuredLines" required>
+    </div>
+
+    <div class="form-group">
+      <label for="age">Age</label>
+      <input type="number" step="any" id="age" required>
+    </div>
+
+    <div class="form-group">
+      <label for="NumberOfTime30-59DaysPastDueNotWorse">Number of Times 30-59 Days Past Due Not Worse</label>
+      <input type="number" id="NumberOfTime30-59DaysPastDueNotWorse" required>
+    </div>
+
+    <div class="form-group">
+      <label for="DebtRatio">Debt Ratio</label>
+      <input type="number" step="any" id="DebtRatio" required>
+    </div>
+
+    <div class="form-group">
+      <label for="MonthlyIncome">Monthly Income</label>
+      <input type="number" step="any" id="MonthlyIncome" required>
+    </div>
+
+    <div class="form-group">
+      <label for="NumberOfOpenCreditLinesAndLoans">Number of Open Credit Lines and Loans</label>
+      <input type="number" id="NumberOfOpenCreditLinesAndLoans" required>
+    </div>
+
+    <div class="form-group">
+      <label for="NumberOfTimes90DaysLate">Number of Times 90 Days Late</label>
+      <input type="number" id="NumberOfTimes90DaysLate" required>
+    </div>
+
+    <div class="form-group">
+      <label for="NumberRealEstateLoansOrLines">Number of Real Estate Loans or Lines</label>
+      <input type="number" id="NumberRealEstateLoansOrLines" required>
+    </div>
+
+    <div class="form-group">
+      <label for="NumberOfTime60-89DaysPastDueNotWorse">Number of Times 60-89 Days Past Due Not Worse</label>
+      <input type="number" id="NumberOfTime60-89DaysPastDueNotWorse" required>
+    </div>
+
+    <div class="form-group">
+      <label for="NumberOfDependents">Number of Dependents</label>
+      <input type="number" id="NumberOfDependents" required>
+    </div>
+
+    <button type="submit">Predict</button>
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    const form = document.getElementById("predictForm");
+    const resultDiv = document.getElementById("result");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const data = {
+        RevolvingUtilizationOfUnsecuredLines: parseFloat(document.getElementById("RevolvingUtilizationOfUnsecuredLines").value),
+        age: parseInt(document.getElementById("age").value),
+        "NumberOfTime30-59DaysPastDueNotWorse": parseInt(document.getElementById("NumberOfTime30-59DaysPastDueNotWorse").value),
+        DebtRatio: parseFloat(document.getElementById("DebtRatio").value),
+        MonthlyIncome: parseFloat(document.getElementById("MonthlyIncome").value),
+        NumberOfOpenCreditLinesAndLoans: parseInt(document.getElementById("NumberOfOpenCreditLinesAndLoans").value),
+        NumberOfTimes90DaysLate: parseInt(document.getElementById("NumberOfTimes90DaysLate").value),
+        NumberRealEstateLoansOrLines: parseInt(document.getElementById("NumberRealEstateLoansOrLines").value),
+        "NumberOfTime60-89DaysPastDueNotWorse": parseInt(document.getElementById("NumberOfTime60-89DaysPastDueNotWorse").value),
+        NumberOfDependents: parseInt(document.getElementById("NumberOfDependents").value)
+      };
+
+      try {
+        const response = await fetch("https://codealpha-creditscoringmodel.onrender.com/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if ("prediction" in result) {
+          resultDiv.innerHTML = `<strong>Prediction:</strong> ${result.prediction}`;
+        } else {
+          resultDiv.innerHTML = "Error: Invalid response from server.";
+        }
+      } catch (error) {
+        resultDiv.innerHTML = "Error: Could not reach the API.";
+        console.error(error);
+      }
+    });
+  </script>
+
+</body>
+</html>
